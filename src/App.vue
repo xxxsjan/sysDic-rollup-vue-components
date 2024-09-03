@@ -8,8 +8,10 @@
 </template>
 
 <script>
-import {cofpAgrTypeSelectNormal} from '@/components/index.js'
+import cofpAgrTypeSelectNormal from '@/components/cofp-agr_type-data/cofpAgrTypeSelectNormal/index.js'
+
 export default {
+  name:'App',
   components: {
     cofpAgrTypeSelectNormal
   },
@@ -31,4 +33,3 @@ export default {
   margin-top: 60px;
 }
 </style>
-

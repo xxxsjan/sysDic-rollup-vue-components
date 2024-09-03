@@ -17,7 +17,7 @@
 <script>
 import { dictOptions } from '../config.js'
 export default {
-  name: 'select',
+  name: 'cofpAgrTypeSelectNormal',
   components: {},
   props: {
     value: {
@@ -29,7 +29,7 @@ export default {
     placeholder: {
       type: String,
       default: () => {
-        return ''
+        return 'placeholder'
       }
     }
   },
