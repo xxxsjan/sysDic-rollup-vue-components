@@ -52,7 +52,7 @@ async function build(input, outputFileName) {
 }
 
 glob('src/components/*/**/index.js', {
-  cwd: __dirname,
+  cwd: process.cwd,
 },
   (err, files) => {
     if (err) {
