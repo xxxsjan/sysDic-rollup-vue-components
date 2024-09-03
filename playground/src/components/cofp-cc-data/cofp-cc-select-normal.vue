@@ -15,7 +15,7 @@
   </el-select>
 </template>
 <script>
-import { dictOptions } from '../config.js'
+import { dictOptions } from './config.js'
 export default {
   name: 'select',
   components: {},

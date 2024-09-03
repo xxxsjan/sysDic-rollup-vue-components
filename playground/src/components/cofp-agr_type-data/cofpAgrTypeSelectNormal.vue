@@ -15,9 +15,9 @@
   </el-select>
 </template>
 <script>
-import { dictOptions } from '../config.js'
+import { dictOptions } from './config.js'
 export default {
-  name: 'cofpAgrTypeSelectNormal',
+  name: 'select',
   components: {},
   props: {
     value: {
@@ -29,7 +29,7 @@ export default {
     placeholder: {
       type: String,
       default: () => {
-        return 'placeholder'
+        return '输入'
       }
     }
   },

@@ -9,7 +9,7 @@
   </el-cascader>
 </template>
 <script>
-import { dictOptions } from '../config.js'
+import { dictOptions } from './config.js'
 function buildTree(data, parentId = 0) {
   return data
     .filter(item => item.parentId === parentId)

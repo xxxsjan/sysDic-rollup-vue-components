@@ -8,13 +8,11 @@
 </template>
 
 <script>
-import cofpAgrTypeSelectNormal from '@/components/cofp-agr_type-data/cofpAgrTypeSelectNormal/index.js'
-
+// import {cofpAgrTypeSelectNormal} from '@/components/index.js'
 export default {
-  name:'App',
-  components: {
-    cofpAgrTypeSelectNormal
-  },
+  // components: {
+  //   cofpAgrTypeSelectNormal
+  // },
   data() {
     return {
       val: ['dictType1', 'dictType2'],
@@ -33,3 +31,4 @@ export default {
   margin-top: 60px;
 }
 </style>
+
