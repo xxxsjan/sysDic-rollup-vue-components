@@ -1,21 +1,17 @@
+
+
+const glob = require('glob');
+const path = require('path');
 const rollup = require('rollup');
 const vuePlugin = require('rollup-plugin-vue');
 const commonjs = require('@rollup/plugin-commonjs');
 const resolve = require('@rollup/plugin-node-resolve');
 const babel = require('@rollup/plugin-babel').default;
+const postcss = require("rollup-plugin-postcss");
+const autoprefixer = require("autoprefixer");
+const clear = require("rollup-plugin-clear");
 
-// 配置文件
 const config = {
-  input: [
-    './src/components/MyComponent1.vue',
-    './src/components/MyComponent2.vue',
-    './src/components/MyComponent3.vue'
-  ],
-  output: {
-    dir: 'dist',
-    format: 'esm',
-    entryFileNames: '[name].js'
-  },
   plugins: [
     vuePlugin(),
     resolve(),
@@ -23,23 +19,51 @@ const config = {
     babel({
       babelHelpers: 'bundled',
       exclude: 'node_modules/**'
-    })
+    }),
+    postcss({
+      plugins: [
+        autoprefixer()
+      ]
+    }),
+    clear({
+      targets: ["dist"],
+    }),
   ]
 };
+const outputOptions = {
+  dir: 'dist',
+  format: 'es',
+  entryFileNames: `[name].js`
+};
 
-// 创建打包任务
-async function build() {
-  for (const input of config.input) {
-    const bundle = await rollup.rollup({
-      ...config,
-      input
-    });
+async function build(input, outputFileName) {
+  console.log('input, outputFileName: ', input, outputFileName);
+  const bundle = await rollup.rollup({
+    ...config,
+    input
+  });
+  const entryFileNames = `${outputFileName}.js`
+  await bundle.write({
+    ...outputOptions,
+    entryFileNames
+  });
 
-    await bundle.write(config.output);
-
-    console.log(`打包完成: ${input} -> ${config.output.dir}/${input.replace('./src/', '')}.js`);
-  }
+  console.log(`打包完成:  -> ${entryFileNames}`);
 }
 
-// 执行打包
-build();
+glob('src/components/*/**/index.js', {
+  cwd: __dirname,
+},
+  (err, files) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    files.forEach(file => {
+      console.log('file: ', file);
+      const folderName = path.basename(path.dirname(file));
+      // const fileName = path.basename(file, '.js');
+      const _p = path.resolve(__dirname, file)
+      build(_p, `${folderName}`);
+    });
+  });
