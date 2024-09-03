@@ -1,4 +1,4 @@
-import InputOne from './InputOne'
+import InputOne from './InputOne.vue'
 
 InputOne.install = function(Vue) {
   Vue.component(InputOne.name, InputOne);
