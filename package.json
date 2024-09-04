@@ -3,6 +3,12 @@
   "version": "0.1.0",
   "main": "dist/index.js",
   "module": "dist/index.js",
+  "exports":{
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.common.js"
+    }
+  },
   "files": [
     "dist"
   ],
@@ -26,6 +32,9 @@
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-vue": "^5.1.9",
     "vue-template-compiler": "^2.6.14"
+  },
+  "peerDependencies": {
+    "element-ui": "^2.15.14"
   },
   "browserslist": [
     "> 1%",
