@@ -63,7 +63,6 @@ function main() {
       const comNameList =[]
       await Promise.all(
         files.map((file) => {
-          console.log('file: ', file);
           const comName = path.basename(path.dirname(file));
           comNameList.push(comName)
           // const fileName = path.basename(file, '.js');
@@ -80,10 +79,10 @@ function main() {
 function createOutputIndexJs(comNameList){
   const importStr = comNameList.map((name,index)=>`export { default as ${name} } from './${name}.js'`).join('\n')
 
-  const componentsStr = comNameList.map(name=>`${name},`).join('\n')
+  const componentsStr = comNameList.map(name=>`  ${name},`).join('\n')
   const content = `${importStr}
 const components = [
-  ${componentsStr}
+${componentsStr}
 ]
 
 const install = function (Vue) {
@@ -93,7 +92,8 @@ const install = function (Vue) {
 }
 
 export default {
-  install
+  install,
+${componentsStr}
 }
   `
   fs.writeFileSync(path.resolve(process.cwd(), 'dist/index.js'), content)
