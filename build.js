@@ -63,6 +63,7 @@ function main() {
       const comNameList =[]
       await Promise.all(
         files.map((file) => {
+          console.log('file: ', file);
           const comName = path.basename(path.dirname(file));
           comNameList.push(comName)
           // const fileName = path.basename(file, '.js');
@@ -70,12 +71,13 @@ function main() {
           return build(_p, comName);
         })
       );
-      genEntryFile(comNameList)
+      createOutputIndexJs(comNameList)
+      createComponentsIndexJs(comNameList,files) 
     }
   );
 }
 
-function genEntryFile(comNameList){
+function createOutputIndexJs(comNameList){
   const importStr = comNameList.map(name=>`import ${name} from './${name}.js'`).join('\n')
   const componentsStr = comNameList.map(name=>`${name},`).join('\n')
   const content = `${importStr}
@@ -93,5 +95,30 @@ export default {
   install
 }
   `
-  fs.writeFileSync(path.resolve(__dirname, 'dist/index.js'), content)
+  fs.writeFileSync(path.resolve(process.cwd(), 'dist/index.js'), content)
+}
+
+
+function createComponentsIndexJs(comNameList,files) {
+  const importStr = comNameList.map((name,index)=>`export { default as ${name} } from '${files[index]}'`).join('\n')
+  const content = `${importStr}
+const requireComponent = require.context('.', true, /\\.vue$/)
+const components = {}
+requireComponent.keys().forEach(fileName => {
+  const componentConfig = requireComponent(fileName)
+  const componentName = fileName.replace(/^.*\\/([^/]+)\\.vue$/, '$1')
+  components[componentName] = componentConfig.default || componentConfig
+})
+// 保留 install 方法用于 Vue.use()
+function install(Vue) {
+  Object.entries(components).forEach(([name, component]) => {
+    Vue.component(name, component)
+  })
+}
+
+export default { 
+  install,
+}
+    `
+    fs.writeFileSync(path.resolve(process.cwd(), 'components/index.js'), content)
 }

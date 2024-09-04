@@ -6,7 +6,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import sysDict from '../../dist/index.js'
 
 Vue.use(Element)
-Vue.use(sysDict)
+// Vue.use(sysDict)
 Vue.config.productionTip = false
 
 new Vue({
