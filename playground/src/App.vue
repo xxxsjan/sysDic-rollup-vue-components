@@ -9,10 +9,10 @@
 
 <script>
 // import {cofpAgrTypeSelectNormal} from '@/components/index.js'
-import cofpAgrTypeSelectNormal from '../../dist/cofpAgrTypeSelectNormal.js'
+// import cofpAgrTypeSelectNormal from '../../dist/cofpAgrTypeSelectNormal.js'
 export default {
   components: {
-    cofpAgrTypeSelectNormal
+    // cofpAgrTypeSelectNormal
   },
   data() {
     return {

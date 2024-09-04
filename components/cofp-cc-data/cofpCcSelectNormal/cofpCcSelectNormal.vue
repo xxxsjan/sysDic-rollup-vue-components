@@ -17,7 +17,7 @@
 <script>
 import { dictOptions } from '../config.js'
 export default {
-  name: 'select',
+  name: 'cofpCcSelectNormal',
   components: {},
   props: {
     value: {

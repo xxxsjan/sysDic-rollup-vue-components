@@ -19,7 +19,7 @@ function buildTree(data, parentId = 0) {
     });
 }
 export default {
-  name: 'select',
+  name: 'cofpBankNoTreeSelect',
   components: {},
   props: {
     value: {
