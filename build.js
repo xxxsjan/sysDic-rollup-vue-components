@@ -35,7 +35,6 @@ const outputOptions = {
 };
 
 async function build(input, outputFileName) {
-  console.log('input, outputFileName: ', input, outputFileName);
   const bundle = await rollup.rollup({
     ...config,
     input
@@ -48,20 +47,23 @@ async function build(input, outputFileName) {
 
   console.log(`打包完成:  -> ${entryFileNames}`);
 }
+main()
 
-glob('/components/*/**/index.js', {
-  cwd: process.cwd,
-},
-  (err, files) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    files.forEach(file => {
-      console.log('file: ', file);
-      const folderName = path.basename(path.dirname(file));
-      // const fileName = path.basename(file, '.js');
-      const _p = path.resolve(__dirname, file)
-      // build(_p, `${folderName}`);
+function main() {
+  glob('./components/*/**/index.js', {
+    cwd: process.cwd(),
+  },
+    (err, files) => {
+      console.log('files: ', files);
+      if (err) {
+        console.error(err);
+        return;
+      }
+      files.forEach(file => {
+        const folderName = path.basename(path.dirname(file));
+        // const fileName = path.basename(file, '.js');
+        const _p = path.resolve(__dirname, file)
+        build(_p, `${folderName}`);
+      });
     });
-  });
+}

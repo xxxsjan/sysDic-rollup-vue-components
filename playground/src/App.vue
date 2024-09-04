@@ -9,10 +9,11 @@
 
 <script>
 // import {cofpAgrTypeSelectNormal} from '@/components/index.js'
+import cofpAgrTypeSelectNormal from '../../dist/cofpAgrTypeSelectNormal.js'
 export default {
-  // components: {
-  //   cofpAgrTypeSelectNormal
-  // },
+  components: {
+    cofpAgrTypeSelectNormal
+  },
   data() {
     return {
       val: ['dictType1', 'dictType2'],
