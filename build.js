@@ -1,5 +1,3 @@
-
-
 const glob = require('glob');
 const path = require('path');
 const rollup = require('rollup');
@@ -51,7 +49,7 @@ async function build(input, outputFileName) {
   console.log(`打包完成:  -> ${entryFileNames}`);
 }
 
-glob('src/components/*/**/index.js', {
+glob('/components/*/**/index.js', {
   cwd: process.cwd,
 },
   (err, files) => {
@@ -64,6 +62,6 @@ glob('src/components/*/**/index.js', {
       const folderName = path.basename(path.dirname(file));
       // const fileName = path.basename(file, '.js');
       const _p = path.resolve(__dirname, file)
-      build(_p, `${folderName}`);
+      // build(_p, `${folderName}`);
     });
   });
