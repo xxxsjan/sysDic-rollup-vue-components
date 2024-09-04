@@ -77,7 +77,7 @@ function main() {
 }
 
 function createOutputIndexJs(comNameList){
-  const importStr = comNameList.map((name,index)=>`export { default as ${name} } from './${name}.js'`).join('\n')
+  const importStr = comNameList.map((name,index)=>`import ${name} from './${name}.js'`).join('\n')
 
   const componentsStr = comNameList.map(name=>`  ${name},`).join('\n')
   const content = `${importStr}
@@ -89,6 +89,10 @@ const install = function (Vue) {
   components.forEach(component => {
     Vue.component(component.name, component)
   })
+}
+
+export {
+${componentsStr}
 }
 
 export default {

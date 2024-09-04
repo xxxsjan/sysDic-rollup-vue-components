@@ -8,8 +8,10 @@
 </template>
 
 <script>
-import {cofpAgrTypeSelectNormal} from '../../components/index.js'
+// import {cofpAgrTypeSelectNormal} from '../../components/index.js'
+import {cofpAgrTypeSelectNormal} from '../../dist/index.js'
  
+import '../../dist/index.js'
 export default {
   components: {
     cofpAgrTypeSelectNormal
