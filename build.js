@@ -78,7 +78,8 @@ function main() {
 }
 
 function createOutputIndexJs(comNameList){
-  const importStr = comNameList.map(name=>`import ${name} from './${name}.js'`).join('\n')
+  const importStr = comNameList.map((name,index)=>`export { default as ${name} } from './${name}.js'`).join('\n')
+
   const componentsStr = comNameList.map(name=>`${name},`).join('\n')
   const content = `${importStr}
 const components = [
@@ -100,15 +101,19 @@ export default {
 
 
 function createComponentsIndexJs(comNameList,files) {
-  const importStr = comNameList.map((name,index)=>`export { default as ${name} } from '${files[index]}'`).join('\n')
+  const importStr = comNameList.map((name,index)=>`export { default as ${name} } from '${files[index].replace(/\/components/g, '')}'`).join('\n')
   const content = `${importStr}
+
 const requireComponent = require.context('.', true, /\\.vue$/)
+
 const components = {}
+
 requireComponent.keys().forEach(fileName => {
   const componentConfig = requireComponent(fileName)
   const componentName = fileName.replace(/^.*\\/([^/]+)\\.vue$/, '$1')
   components[componentName] = componentConfig.default || componentConfig
 })
+  
 // 保留 install 方法用于 Vue.use()
 function install(Vue) {
   Object.entries(components).forEach(([name, component]) => {
