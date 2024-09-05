@@ -3,9 +3,16 @@
   "version": "0.1.0",
   "main": "dist/index.js",
   "module": "dist/index.js",
+  "require": "dist/index.common.js",
   "files": [
     "dist"
   ],
+  "exports":{
+    ".": {
+      "require": "./dist/index.common.js",
+      "import": "./dist/index.js"
+    }
+  },
   "scripts": {
     "build:lib": "node build.js"
   },
