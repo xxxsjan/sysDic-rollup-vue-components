@@ -3,18 +3,20 @@
     <!-- <cofp-agr_type-select-normal v-model="val" multiple></cofp-agr_type-select-normal> -->
     <!-- <cofp-bank_no-tree-select v-model="val"></cofp-bank_no-tree-select> -->
     <!-- <CofpCofp0001TreeSelect v-model="val"></CofpCofp0001TreeSelect> -->
-     <cofpAgrTypeSelectNormal></cofpAgrTypeSelectNormal>
+    <cofpAgrTypeSelectNormal></cofpAgrTypeSelectNormal>
+    <!-- <el-button type="primary">11212</el-button> -->
   </div>
 </template>
 
 <script>
 // import {cofpAgrTypeSelectNormal} from '../../components/index.js'
-import {cofpAgrTypeSelectNormal} from '../../dist/index.js'
- 
-import '../../dist/index.js'
+// import {cofpAgrTypeSelectNormal} from '../../dist/index.js'
+// const {cofpAgrTypeSelectNormal} = require('../../dist/index.common.js')
+// console.log('cofpAgrTypeSelectNormal: ', cofpAgrTypeSelectNormal);
+
 export default {
   components: {
-    cofpAgrTypeSelectNormal
+    // cofpAgrTypeSelectNormal
   },
   data() {
     return {
@@ -34,4 +36,3 @@ export default {
   margin-top: 60px;
 }
 </style>
-

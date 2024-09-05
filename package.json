@@ -3,12 +3,6 @@
   "version": "0.1.0",
   "main": "dist/index.js",
   "module": "dist/index.js",
-  "exports":{
-    ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.common.js"
-    }
-  },
   "files": [
     "dist"
   ],

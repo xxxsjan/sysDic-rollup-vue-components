@@ -27,13 +27,23 @@ const config = {
     }),
   ],
 };
-const outputOptions = {
-  dir: "dist",
-  format: "es",
-  entryFileNames: `[name].js`,
-};
 
-async function build(input, outputFileName) {
+const buildList = [
+  {
+    dir: "dist",
+    format: "es",
+    entryFileNames: `[name].js`,
+  },
+  {
+    dir: "dist/cjs",
+    format: "cjs",
+    entryFileNames: `[name].js`,
+  },
+]
+
+main();
+
+async function build(input, outputFileName, outputOptions) {
   const bundle = await rollup.rollup({
     ...config,
     input,
@@ -46,40 +56,14 @@ async function build(input, outputFileName) {
 
   console.log(`打包完成:  -> ${entryFileNames}`);
 }
-main();
-
 function main() {
-  glob(
-    "./components/*/**/index.js",
-    {
-      cwd: process.cwd(),
-    },
-    async (err, files) => {
-      console.log("files: ", files);
-      if (err) {
-        console.error(err);
-        return;
-      }
-      const comNameList =[]
-      await Promise.all(
-        files.map((file) => {
-          const comName = path.basename(path.dirname(file));
-          comNameList.push(comName)
-          // const fileName = path.basename(file, '.js');
-          const _p = path.resolve(__dirname, file);
-          return build(_p, comName);
-        })
-      );
-      createOutputIndexJs(comNameList)
-      createComponentsIndexJs(comNameList,files) 
-    }
-  );
+  buildEsm()
+  buildCjs()
 }
 
-function createOutputIndexJs(comNameList){
-  const importStr = comNameList.map((name,index)=>`import ${name} from './${name}.js'`).join('\n')
-
-  const componentsStr = comNameList.map(name=>`  ${name},`).join('\n')
+function createOutputIndexJs(comNameList) {
+  const importStr = comNameList.map((name, index) => `import ${name} from './${name}.js'`).join('\n')
+  const componentsStr = comNameList.map(name => `  ${name},`).join('\n')
   const content = `${importStr}
 const components = [
 ${componentsStr}
@@ -104,8 +88,8 @@ ${componentsStr}
 }
 
 
-function createComponentsIndexJs(comNameList,files) {
-  const importStr = comNameList.map((name,index)=>`export { default as ${name} } from '${files[index].replace(/\/components/g, '')}'`).join('\n')
+function createComponentsIndexJs(comNameList, files) {
+  const importStr = comNameList.map((name, index) => `export { default as ${name} } from '${files[index].replace(/\/components/g, '')}'`).join('\n')
   const content = `${importStr}
 
 const requireComponent = require.context('.', true, /\\.vue$/)
@@ -129,5 +113,81 @@ export default {
   install,
 }
     `
-    fs.writeFileSync(path.resolve(process.cwd(), 'components/index.js'), content)
+  fs.writeFileSync(path.resolve(process.cwd(), 'components/index.js'), content)
+}
+
+function buildCjs() {
+  glob(
+    "./components/*/**/index.js",
+    {
+      cwd: process.cwd(),
+    },
+    async (err, files) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      const comNameList = []
+      await Promise.all(
+        files.map((file) => {
+          const comName = path.basename(path.dirname(file));
+          comNameList.push(comName)
+          const _p = path.resolve(__dirname, file);
+          return build(_p, comName, buildList[1]);
+        })
+      );
+      const requireStr = comNameList.map((name, index) => `const ${name} = require('./${name}.js')`).join('\n')
+
+      const content = `${requireStr}
+const components = {
+  ${comNameList.join(',\n  ')}
+}
+function install(Vue) {
+  Object.entries(components).forEach(([name, component]) => {
+    Vue.component(name, component)
+  })
+}
+module.exports = {
+  ...components,
+  install
+}`
+      const cjsIndexFileName = `index.common.js`
+      const cjsCacheDir = path.resolve(process.cwd(), buildList[1].dir)
+      const cjsIndexCachePath = path.resolve(process.cwd(), buildList[1].dir, cjsIndexFileName)
+      fs.writeFileSync(cjsIndexCachePath, content)
+      const fileNameWithoutExtension = path.basename(cjsIndexFileName, path.extname(cjsIndexFileName));
+      await build(cjsIndexCachePath, fileNameWithoutExtension, {
+        dir: "dist",
+        format: "cjs",
+      },);
+      fs.rmSync(cjsCacheDir, { recursive: true, force: true })
+    }
+  );
+}
+
+function buildEsm() {
+  glob(
+    "./components/*/**/index.js",
+    {
+      cwd: process.cwd(),
+    },
+    async (err, files) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      const comNameList = []
+      await Promise.all(
+        files.map((file) => {
+          const comName = path.basename(path.dirname(file));
+          comNameList.push(comName)
+          // const fileName = path.basename(file, '.js');
+          const _p = path.resolve(__dirname, file);
+          return build(_p, comName, buildList[0]);
+        })
+      );
+      createOutputIndexJs(comNameList)
+      createComponentsIndexJs(comNameList, files)
+    }
+  );
 }
